@@ -1,5 +1,5 @@
 from django.urls import path
-from Boletin1 import views
+from Boletin2 import views
 
 urlpatterns = [
     
