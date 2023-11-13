@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 import re
-
+from django.utils import timezone
 class formulario(forms.Form):
     username = forms.CharField(
         label='username',
@@ -15,8 +15,11 @@ class formulario(forms.Form):
     )
     
     fechaHora = forms.DateTimeField(
+        label='fechaHora',
         widget=forms.HiddenInput(),
         input_formats=['%Y-%m-%d'],
+        initial=timezone.now,
+        required=False
     )
 
     def clean(self):
@@ -51,6 +54,16 @@ class formulario(forms.Form):
         if not any(char.isdigit() for char in password):
             raise forms.ValidationError('La contraseña debe contener al menos un número.')
 
+
+        if fechaHora:
+            fecha = timezone.now()
+            resta = fecha - fechaHora
+
+            if resta.total_seconds() > 120: 
+               
+                cleaned_data['fechaHora'] = fecha
+                cleaned_data['password'] = ''
+                cleaned_data['username'] = ''
 
         return cleaned_data
 
