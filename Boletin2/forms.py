@@ -57,13 +57,9 @@ class formulario(forms.Form):
 
         if fechaHora:
             fecha = timezone.now()
-            resta = fecha - fechaHora
 
-            if resta.total_seconds() > 120: 
-               
-                cleaned_data['fechaHora'] = fecha
-                cleaned_data['password'] = ''
-                cleaned_data['username'] = ''
+            if (fecha - fechaHora).seconds > 120:
+                raise ValidationError('El formulario no puede enviarse 2 minutos despues de haber accedido')
 
         return cleaned_data
 
